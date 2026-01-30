@@ -1,0 +1,54 @@
+import fs from "fs";
+import os from "os";
+import path from "path";
+import { config } from "process";
+
+
+type Config = {
+    dbUrl: string,
+    currentUserName: string
+}
+
+function getConfigFilePath() : string{
+    return path.join(os.homedir(), ".gatorconfig.json");
+}
+
+function validateConfig(rawConfig: any) {
+  if (!rawConfig.db_url || typeof rawConfig.db_url !== "string") {
+    throw new Error("db_url is required in config file");
+  }
+  if (
+    !rawConfig.current_user_name ||
+    typeof rawConfig.current_user_name !== "string"
+  ) {
+    throw new Error("current_user_name is required in config file");
+  }
+
+  const config: Config = {
+    dbUrl: rawConfig.db_url,
+    currentUserName: rawConfig.current_user_name,
+  };
+
+  return config;
+}
+
+export function setUser(username: string ){
+    const config: Config = {dbUrl : "postgres://example", currentUserName: username};
+    const configJson = JSON.stringify(config);
+    try{
+        fs.writeFileSync(getConfigFilePath(), configJson);
+    }catch (error) {
+        if (error instanceof Error) {
+            console.log(`An error occurred while writing the config file: ${error.message}`);
+        } else {
+            console.log("An unknown error occurred while writing the config file!");
+        }
+    }
+};
+
+export function readConfig(): Config{
+    const configJson = fs.readFileSync(getConfigFilePath(), "utf-8");
+    const config = JSON.parse(configJson);
+    return validateConfig(config);
+}
+

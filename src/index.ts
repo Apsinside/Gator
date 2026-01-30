@@ -1,5 +1,10 @@
+
+import {readConfig, setUser} from "./config.ts"
+
 function main() {
-  console.log("Hello, world!");
+  setUser("Fabian");
+  let config = readConfig();
+  console.log(config);
 }
 
 main();
