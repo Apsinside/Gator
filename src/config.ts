@@ -34,9 +34,14 @@ function validateConfig(rawConfig: any) {
 
 export function setUser(username: string ){
     const config: Config = {dbUrl : "postgres://example", currentUserName: username};
-    const configJson = JSON.stringify(config);
+    const rawConfig = {
+        db_url: config.dbUrl,
+        current_user_name: config.currentUserName,
+    };
+
+    const rawConfigJson = JSON.stringify(rawConfig);
     try{
-        fs.writeFileSync(getConfigFilePath(), configJson);
+        fs.writeFileSync(getConfigFilePath(), rawConfigJson);
     }catch (error) {
         if (error instanceof Error) {
             console.log(`An error occurred while writing the config file: ${error.message}`);
