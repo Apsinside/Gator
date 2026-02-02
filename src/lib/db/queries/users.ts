@@ -1,8 +1,9 @@
 import { db } from "..";
 import { users } from "../schema";
-import { eq } from "drizzle-orm";
+import { ConsoleLogWriter, eq } from "drizzle-orm";
 import { setUser } from "src/config";
 import { firstOrUndefined } from "./utils";
+
 
 export async function createUser(name: string) {
   const [result] = await db.insert(users).values({ name: name }).returning();
@@ -16,4 +17,8 @@ export async function getUser(name: string) {
 
 export async function resetUsers() {
   await db.delete(users);
+}
+
+export async function getUsers(){
+  return db.select().from(users);
 }
