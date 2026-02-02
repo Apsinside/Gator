@@ -1,8 +1,6 @@
 import {CommandsRegistry, registerCommand, runCommand} from "./commands/commands"
 import {handlerRegister, handlerLogin} from "./commands/users";
-import { stringify } from "node:querystring";
-import { exit } from "node:process";
-
+import {handlerReset} from "./commands/reset";
 
 async function main() {
   const commandsRegistry : CommandsRegistry  = {};
@@ -17,6 +15,7 @@ async function main() {
 
   registerCommand(commandsRegistry, "login", handlerLogin);
   registerCommand(commandsRegistry, "register", handlerRegister);
+  registerCommand(commandsRegistry, "reset", handlerReset);
 
   try {
     await runCommand(commandsRegistry, command, ...commandArgs);
