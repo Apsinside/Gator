@@ -2,7 +2,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { config } from "process";
-
+import {getUser} from "./lib/db/queries/users"
 
 type Config = {
     dbUrl: string,
@@ -32,14 +32,15 @@ function validateConfig(rawConfig: any) {
   return config;
 }
 
-export function setUser(username: string ){
-    const config: Config = {dbUrl : "postgres://example", currentUserName: username};
+export async function setUser(username: string ){
+    const config: Config = readConfig();
     const rawConfig = {
         db_url: config.dbUrl,
-        current_user_name: config.currentUserName,
+        current_user_name: username,
     };
 
     const rawConfigJson = JSON.stringify(rawConfig);
+    console.log
     try{
         fs.writeFileSync(getConfigFilePath(), rawConfigJson);
     }catch (error) {
@@ -56,4 +57,3 @@ export function readConfig(): Config{
     const config = JSON.parse(configJson);
     return validateConfig(config);
 }
-

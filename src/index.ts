@@ -1,11 +1,10 @@
-
-import {readConfig} from "./config.ts"
-import {CommandsRegistry, registerCommand, runCommand, handlerLogin} from "./commands.ts"
+import {CommandsRegistry, registerCommand, runCommand} from "./commands/commands"
+import {handlerRegister, handlerLogin} from "./commands/users";
 import { stringify } from "node:querystring";
 import { exit } from "node:process";
 
 
-function main() {
+async function main() {
   const commandsRegistry : CommandsRegistry  = {};
   const args = process.argv.slice(2);
   if(args.length == 0){
@@ -17,20 +16,19 @@ function main() {
   const commandArgs = args.slice(1);
 
   registerCommand(commandsRegistry, "login", handlerLogin);
+  registerCommand(commandsRegistry, "register", handlerRegister);
 
   try {
-    runCommand(commandsRegistry, command, ...commandArgs);
+    await runCommand(commandsRegistry, command, ...commandArgs);
   } catch(error) {
     if (error instanceof Error) {
-      console.log(`Error running command ${error.message}`);
+      console.log(`Error running command ${command}: ${error.message}`);
     } else {
       console.error(`Error running command ${command}: ${error}`);
     }
     process.exit(1);
   }
-
-  let config = readConfig();
-  console.log(config);
+  process.exit(0);
 }
 
 main();
