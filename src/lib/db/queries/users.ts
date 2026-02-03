@@ -1,7 +1,6 @@
 import { db } from "..";
 import { users } from "../schema";
-import { ConsoleLogWriter, eq } from "drizzle-orm";
-import { setUser } from "src/config";
+import { eq } from "drizzle-orm";
 import { firstOrUndefined } from "./utils";
 
 
@@ -21,4 +20,9 @@ export async function resetUsers() {
 
 export async function getUsers(){
   return db.select().from(users);
+}
+
+export async function getUserById(id: string){
+  const result = await db.select().from(users).where(eq(users.id, id));
+  return firstOrUndefined(result);
 }

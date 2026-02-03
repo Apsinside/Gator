@@ -3,6 +3,7 @@ import {handlerRegister, handlerLogin, handlerUsers} from "./commands/users";
 import {handlerReset} from "./commands/reset";
 import {handlerAggregate} from "./commands/aggregator"
 import { fetchFeed } from "./rss";
+import { handlerAddFeed, handlerFeeds } from "./commands/feeds";
 
 async function main() {
   const commandsRegistry : CommandsRegistry  = {};
@@ -20,6 +21,8 @@ async function main() {
   registerCommand(commandsRegistry, "reset", handlerReset);
   registerCommand(commandsRegistry, "users", handlerUsers);
   registerCommand(commandsRegistry, "agg", handlerAggregate);
+  registerCommand(commandsRegistry, "addfeed", handlerAddFeed);
+  registerCommand(commandsRegistry, "feeds", handlerFeeds);
 
   try {
     await runCommand(commandsRegistry, command, ...commandArgs);
