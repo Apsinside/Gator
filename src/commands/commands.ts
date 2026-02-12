@@ -1,11 +1,14 @@
-import { userInfo } from "node:os";
-import { setUser } from "../config";
-import {createUser, getUser} from "../lib/db/queries/users"
+import { User } from "src/lib/db/schema";
 
 export type CommandHandler = (cmdName: string, ...args: string[]) => Promise<void>;
 
 export type CommandsRegistry = Record<string, CommandHandler>;
 
+export type UserCommandHandler = (
+  cmdName: string,
+  user: User,
+  ...args: string[]
+) => Promise<void>;
 
 export function registerCommand(registry: CommandsRegistry, cmdName: string, handler: CommandHandler){
     registry[cmdName] = handler;

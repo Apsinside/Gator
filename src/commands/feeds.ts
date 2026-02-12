@@ -5,16 +5,9 @@ import { Feed, User } from "src/lib/db/schema";
 import { createFeedFollow } from "src/lib/db/queries/feed-follows";
 import { printFeedFollow } from "./feed-follows";
 
-export async function handlerAddFeed(cmdName: string, ...args: string[]) {
+export async function handlerAddFeed(cmdName: string, user: User, ...args: string[]) {
   if (args.length !== 2) {
     throw new Error(`usage: ${cmdName} <feed_name> <url>`);
-  }
-
-  const config = readConfig();
-  const user = await getUser(config.currentUserName);
-
-  if (!user) {
-    throw new Error(`User ${config.currentUserName} not found`);
   }
 
   const feedName = args[0];
@@ -42,7 +35,7 @@ function printFeed(feed: Feed, user: User) {
   console.log(`* User:          ${user.name}`);
 }
 
-export async function handlerListFeeds(_: string) {
+export async function handlerListFeeds(cmdName: string, user: User, ...args: string[]) {
   const feeds = await getFeeds();
 
   if (feeds.length === 0) {
