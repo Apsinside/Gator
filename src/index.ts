@@ -5,6 +5,7 @@ import {handlerAggregate} from "./commands/aggregator"
 import { middlewareLoggedIn } from "./middleware";
 import { handlerAddFeed, handlerListFeeds } from "./commands/feeds";
 import { handlerFollow, handlerListFeedFollows, handlerUnfollow } from "./commands/feed-follows";
+import { handlerBrowse } from "./commands/browse";
 
 async function main() {
 
@@ -27,7 +28,8 @@ async function main() {
   registerCommand(commandsRegistry, "follow", middlewareLoggedIn(handlerFollow));
   registerCommand(commandsRegistry, "following", middlewareLoggedIn(handlerListFeedFollows));
   registerCommand(commandsRegistry, "unfollow", middlewareLoggedIn(handlerUnfollow));
-
+  registerCommand(commandsRegistry, "browse", middlewareLoggedIn(handlerBrowse));
+  
   try {
     await runCommand(commandsRegistry, command, ...commandArgs);
   } catch(error) {

@@ -1,5 +1,8 @@
+import { createPost } from "src/lib/db/queries/posts";
 import {fetchFeed} from "../rss"
 import { getNextFeedToFetch, markFeedFetched } from "src/lib/db/queries/feeds";
+import { it } from "node:test";
+import { Feed, NewPost } from "src/lib/db/schema";
 
 export async function handlerAggregate(cmdName: string, ...args: string[]){
     if (args.length !== 1) {
@@ -51,18 +54,37 @@ export async function handleError(reason: any){
     throw new Error("Aggregate failed with unhandled error");
 }
 
-export async function scrapeFeeds(){
-    const feed = await getNextFeedToFetch();
-    if(!feed){
-        throw Error("No feed to fetch")
-    }
-    const result = await markFeedFetched(feed.id);
-    if(!result){
-        throw Error("Failed to mark feed as fetched")
-    }
-    const fetchedFeed = await fetchFeed(feed.url);
+async function scrapeFeeds() {
+  const feed = await getNextFeedToFetch();
+  if (!feed) {
+    console.log(`No feeds to fetch.`);
+    return;
+  }
+  console.log(`Found a feed to fetch!`);
+  await scrapeFeed(feed);
+}
 
-    for(const item of fetchedFeed.channel.item){
-        console.log(item);
-    }
+async function scrapeFeed(feed: Feed) {
+  await markFeedFetched(feed.id);
+
+  const feedData = await fetchFeed(feed.url);
+  for (let item of feedData.channel.item) {
+    console.log(`Found post: %s`, item.title);
+
+    const now = new Date();
+
+    await createPost({
+      url: item.link,
+      feedId: feed.id,
+      title: item.title,
+      createdAt: now,
+      updatedAt: now,
+      description: item.description,
+      publishedAt: new Date(item.pubDate),
+    } satisfies NewPost);
+  }
+
+  console.log(
+    `Feed ${feed.name} collected, ${feedData.channel.item.length} posts found`,
+  );
 }
