@@ -7,13 +7,13 @@ import { handlerAddFeed, handlerListFeeds } from "./commands/feeds";
 import { handlerFollow, handlerListFeedFollows, handlerUnfollow } from "./commands/feed-follows";
 
 async function main() {
+
   const commandsRegistry : CommandsRegistry  = {};
   const args = process.argv.slice(2);
   if(args.length == 0){
     console.log("no command provided!");
     process.exit(1);
   }
-
   const command = args[0];
   const commandArgs = args.slice(1);
 
