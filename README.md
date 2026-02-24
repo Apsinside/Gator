@@ -2,7 +2,7 @@
 
 RSS Feed aggregator written in Typescript. 
 
-## Prerquisites
+## Prerequisites
 
 1. Install [NMV](https://github.com/nvm-sh/nvm). 
 
@@ -10,7 +10,7 @@ RSS Feed aggregator written in Typescript.
 
 3. Install all dependencies with `npm install`
 
-### Setup SQL and config
+### Setup PostgreSQL and config
 
 1. Install Postgres and set up a password.
 
