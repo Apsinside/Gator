@@ -4,7 +4,7 @@ RSS Feed aggregator written in Typescript.
 
 ## Prerequisites
 
-1. Install [NMV](https://github.com/nvm-sh/nvm). 
+1. Install [NVM](https://github.com/nvm-sh/nvm). 
 
 2. Run `nvm use` in the repositorie's directory to install Node.js version 22.15.0
 
